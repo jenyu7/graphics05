@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "ml6.h"
 #include "display.h"
@@ -19,6 +20,14 @@
 void add_circle( struct matrix * points,
                  double cx, double cy, double cz,
                  double r, double step ) {
+  double i;
+  double x, y, z;
+  for(i = 0; i < 1; i+=step){
+    x = r*cos(2*i*M_PI) + cx;
+    y = r*sin(2*i*M_PI) + cy;
+    z = cz;
+    add_edge(points, x, y, z, r*cos(2*(i+step)*M_PI) + cx, r*sin(2*(i+step)*M_PI) + cy, z);
+  }
 }
 
 /*======== void add_curve() ==========
@@ -45,6 +54,18 @@ void add_curve( struct matrix *points,
                 double x2, double y2, 
                 double x3, double y3, 
                 double step, int type ) {
+  double x, y, s, k;
+  struct matrix * xcurve = generate_curve_coefs(x0, x1, x2, x3, type);
+  struct matrix * ycurve = generate_curve_coefs(y0, y1, y2, y3, type);
+
+  double i;
+  for(i = 0; i < 1; i += step){
+    x = xcurve->m[0][0]*i*i*i + xcurve->m[1][0]*i*i + xcurve->m[2][0]*i + xcurve->m[3][0];
+    s = xcurve->m[0][0]*pow(i+step, 3) + xcurve->m[1][0]*pow(i+step, 2) + xcurve->m[2][0]*(i+step) + xcurve->m[3][0];
+    y = ycurve->m[0][0]*i*i*i + ycurve->m[1][0]*i*i + ycurve->m[2][0]*i + ycurve->m[3][0];
+    k = ycurve->m[0][0]*pow(i+step, 3) + ycurve->m[1][0]*pow(i+step, 2) + ycurve->m[2][0]*(i+step) + ycurve->m[3][0];
+    add_edge(points, x, y, 0, s, k, 0);
+  }
 }
 
 

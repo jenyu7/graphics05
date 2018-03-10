@@ -141,7 +141,32 @@ void parse_file ( char * filename,
 
       matrix_mult(tmp, transform);
     }//end rotate
-
+    
+    else if ( strncmp(line, "circle", strlen(line)) == 0 ) {
+      fgets(line, sizeof(line), f);
+      double radius;
+      sscanf(line, "%lf %lf %lf %lf",
+             xvals, yvals, zvals, &radius);
+      add_circle( edges, xvals[0], yvals[0], zvals[0], radius, 0.01);
+    }//end circle
+    
+    else if(strncmp(line, "bezier", strlen(line)) == 0){
+      fgets(line, sizeof(line), f);
+      //printf("MOVE\t%s", line);
+      double x0, y0, x1, y1, x2, y2, x3, y3;
+      sscanf(line, "%lf %lf %lf %lf %lf %lf %lf %lf",
+             &x0, &y0, &x1, &y1, &x2, &y2, &x3, &y3);
+      add_curve( edges, x0, y0, x1, y1, x2, y2, x3, y3, 0.01, BEZIER );
+    }//end bezier
+    
+    else if(strncmp(line, "hermite", strlen(line)) == 0){
+      fgets(line, sizeof(line), f);
+      double x0, y0, x1, y1, nx0, ny0, nx1, ny1;
+      sscanf(line, "%lf %lf %lf %lf %lf %lf %lf %lf",
+             &x0, &y0, &x1, &y1, &nx0, &ny0, &nx1, &ny1);
+      add_curve( edges, x0, y0, x1, y1, nx0, ny0, nx1, ny1, 0.01, HERMITE );
+    }//end hermite
+    
     else if ( strncmp(line, "ident", strlen(line)) == 0 ) {
       //printf("IDENT\t%s", line);
       ident(transform);
