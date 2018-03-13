@@ -1,3 +1,9 @@
+/*
+ * Jen Yu
+ * Pd 4 Graphics
+ * 2018-03-12
+ * Work 05: It's spring training, time to work on your curve.
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
